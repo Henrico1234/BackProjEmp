@@ -1,0 +1,51 @@
+# ----------------------------------------------------------------
+# Ficheiro .gitignore para um projeto Backend Python
+# ----------------------------------------------------------------
+
+# 1. Ambientes Virtuais (Como pediste)
+# Ignora pastas de ambientes virtuais
+.venv/
+venv/
+env/
+.env/
+.virtualenv/
+
+# 2. Cache do Python (Como pediste)
+# Ignora o bytecode compilado e caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 3. Ficheiros de Ambiente e Configuração (MUITO IMPORTANTE)
+# Nunca envies estes ficheiros! Eles contêm senhas e chaves de API.
+.env
+.env.*
+*.env
+
+# 4. Pastas de IDEs e Editores
+# Configurações específicas do editor de cada programador
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 5. Ficheiros de Sistema Operativo
+# Ficheiros gerados pelo macOS, Windows e Linux
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 6. Artefactos de Build e Distribuição
+# Pastas e ficheiros gerados ao "construir" o projeto
+build/
+dist/
+*.egg-info/
+*.egg
+*.whl
+
+# 7. Relatórios de Testes e Cobertura
+# Gerados por ferramentas como pytest e coverage.py
+.pytest_cache/
+.coverage
+htmlcov/
