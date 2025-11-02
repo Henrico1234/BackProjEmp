@@ -49,16 +49,14 @@ def register_new_loan(
 
 @router.get("/active/", response_model=List[LoanResponse])
 def get_active_loans_list(
-    manager: LoanManager = Depends(get_loan_manager) 
+    manager: LoanManager = Depends(get_loan_manager)
 ):
     loans_df = manager.get_active_loans()
     if loans_df.empty:
         return []
     
     loans_df['ID'] = loans_df['ID'].astype(str)
-    loans_df_renamed = loans_df.rename(columns={'Juros%': 'Juros'}) 
-    return loans_df_renamed.to_dict(orient='records')
-
+    return loans_df.to_dict(orient='records')
 
 @router.post("/pay/{loan_id}/", status_code=200)
 def pay_loan_installment(

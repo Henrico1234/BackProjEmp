@@ -40,12 +40,17 @@ def set_budget(
 @router.get("/{month_year}/", response_model=List[BudgetResponse])
 def get_budgets(
     month_year: str, 
-    manager: BudgetManager = Depends(get_budget_manager) 
+    manager: BudgetManager = Depends(get_budget_manager) # <-- CORREÇÃO AQUI
 ):
     budgets_df = manager.get_budgets_for_month(month_year)
     if budgets_df.empty:
         return []
-    return budgets_df.to_dict(orient='records')
+        
+    budgets_df_renamed = budgets_df.rename(columns={
+        'Categoria': 'category',
+        'Limite': 'limit'
+    })
+    return budgets_df_renamed.to_dict(orient='records')
 
 @router.get("/check/{month_year}/", response_model=List[BudgetExceededResponse])
 def check_budgets(
