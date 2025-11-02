@@ -30,3 +30,20 @@ budget_manager = BudgetManager(core_manager, monthly_control_manager)
 report_manager = ReportManager(core_manager, monthly_control_manager)
 
 print("Dependências (Managers) inicializadas com sucesso.")
+
+
+def get_budget_manager():
+    """Retorna a instância singleton do BudgetManager."""
+    return budget_manager
+
+def get_debt_manager():
+    """Retorna a instância singleton do DebtManager."""
+    return debt_manager
+
+def get_loan_manager():
+    """Retorna a instância singleton do LoanManager."""
+    return loan_manager
+
+def get_report_manager():
+    """Retorna a instância singleton do ReportManager."""
+    return report_manager
