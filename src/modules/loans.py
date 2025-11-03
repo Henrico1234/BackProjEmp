@@ -25,6 +25,41 @@ class LoanManager:
             print("Número de parcelas inválido.")
             return False
 
+        
+        transaction_type = None
+        description = None
+        
+        meio_pagamento = "Conta"
+
+        if loan_type == 'Recebido':
+            transaction_type = 'Ganho'
+            description = f"Empréstimo Recebido - {involved_party}"
+        elif loan_type == 'Concedido':
+            transaction_type = 'Despesa'
+            description = f"Empréstimo Concedido - {involved_party}"
+        
+        if transaction_type:
+            today = datetime.now().strftime("%Y-%m-%d")
+            month_year = datetime.now().strftime("%m-%Y")
+            
+            if "Empréstimos" not in self.core.load_data(DEFAULT_CATEGORIES_SHEET)['Categoria'].tolist():
+                self.core.add_category("Empréstimos")
+            
+            
+            success_monthly_transaction = self.monthly_control.add_transaction(
+                month_year, 
+                today, 
+                transaction_type, 
+                description, 
+                "Empréstimos", 
+                float(original_value),
+                meio_pagamento
+            )
+            
+            if not success_monthly_transaction:
+                print(f"Falha ao registrar a transação de {transaction_type} inicial do empréstimo. Abortando.")
+                return False
+
         data = {
             'ID': str(uuid.uuid4()), 
             'Tipo': loan_type,
@@ -35,6 +70,7 @@ class LoanManager:
             'ParcelasPagas': 0, 
             'Status': 'Aberto'
         }
+        
         return self.core.add_loan(data)
 
     def record_installment_payment(self, loan_id: str, month_year: str, amount_paid: float):
@@ -75,15 +111,25 @@ class LoanManager:
             print(f"Erro: Valor pago (R$ {amount_paid:.2f}) é menor que o valor mínimo da parcela (R$ {valor_parcela_minima:.2f}).")
             return False
         
-        transaction_type = 'Ganho' if current_loan_data['Tipo'] == 'Credor' else 'Despesa'
+        
+        transaction_type = 'Ganho' if current_loan_data['Tipo'] == 'Concedido' else 'Despesa'
         description = f"Pagamento/Recebimento de Empréstimo - {current_loan_data['ParteEnvolvida']}"
         today = datetime.now().strftime("%Y-%m-%d")
+        
+        meio_pagamento = "Conta" 
 
         if "Empréstimos" not in self.core.load_data(DEFAULT_CATEGORIES_SHEET)['Categoria'].tolist():
             self.core.add_category("Empréstimos")
         
+        
         success_monthly_transaction = self.monthly_control.add_transaction(
-            month_year, today, transaction_type, description, "Empréstimos", amount_paid
+            month_year, 
+            today, 
+            transaction_type, 
+            description, 
+            "Empréstimos", 
+            amount_paid,
+            meio_pagamento
         )
 
         if not success_monthly_transaction:
